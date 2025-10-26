@@ -1,0 +1,181 @@
+PHYSICS EXPERIMENT HELPER - DETAILED ARCHITECTURE DIAGRAM
+================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                           USER INTERFACE LAYER                                  │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                │
+│  │   Web Frontend  │  │   Mobile App    │  │   API Client    │                │
+│  │   (React/HTML)  │  │   (Future)      │  │   (Postman)     │                │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘                │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            API GATEWAY LAYER                                    │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        FastAPI Server                                      │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │   REST API      │  │   WebSocket     │  │   Static Files  │            │ │
+│  │  │   Endpoints     │  │   Real-time     │  │   Serving       │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                          DEEPAGENTS CORE LAYER                                 │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                    Main Physics Agent                                      │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │   Planning      │  │   File System   │  │   Orchestration │            │ │
+│  │  │   (write_todos) │  │   Management    │  │   Engine        │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+│                                    │                                           │
+│                                    ▼                                           │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        Sub-Agents System                                   │ │
+│  │  ┌─────────────────────────────────┐  ┌─────────────────────────────────┐  │ │
+│  │  │      Research Sub-Agent         │  │      Critique Sub-Agent         │  │ │
+│  │  │  ┌─────────────────────────────┐ │  │  ┌─────────────────────────────┐ │  │ │
+│  │  │  │ • Physics Education Expert  │ │  │  │ • Safety & Quality Review  │ │  │ │
+│  │  │  │ • Web Search Integration    │ │  │  │ • Age-Appropriate Check    │ │  │ │
+│  │  │  │ • Resource Gathering        │ │  │  │ • Scientific Accuracy       │ │  │ │
+│  │  │  └─────────────────────────────┘ │  │  └─────────────────────────────┘ │  │ │
+│  │  └─────────────────────────────────┘  └─────────────────────────────────┘  │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            TOOLS & SERVICES LAYER                              │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        Web Search APIs                                     │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │    SerpAPI      │  │   DuckDuckGo    │  │    Tavily       │            │ │
+│  │  │  (Primary)      │  │   (Fallback)    │  │  (Backup)       │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        AI Image Generation                                │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │   Replicate     │  │   Image Styles  │  │   Local Storage │            │ │
+│  │  │   nano-banana   │  │   (Scientific,  │  │   & Download    │            │ │
+│  │  │   Model         │  │   Educational,  │  │   Management    │            │ │
+│  │  │                 │  │   Diagram)      │  │                 │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        File System Tools                                   │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │   write_file    │  │   read_file     │  │   edit_file     │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │   list_files    │  │   delete_file   │  │   move_file     │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            DATA PERSISTENCE LAYER                              │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        File System Storage                                 │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │   Markdown      │  │   AI-Generated  │  │   Templates     │            │ │
+│  │  │   Files         │  │   Images        │  │   & Assets      │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        Session Management                                  │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │ │
+│  │  │   In-Memory     │  │   File Cache    │  │   Export Tools  │            │ │
+│  │  │   Sessions      │  │   System        │  │   (ZIP/HTML)    │            │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘            │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+DATA FLOW DIAGRAM
+=================
+
+1. USER REQUEST
+   User → Web Frontend → FastAPI Server → Main Physics Agent
+
+2. PLANNING PHASE
+   Main Agent → write_todos → Task Breakdown → Progress Tracking
+
+3. RESEARCH PHASE
+   Main Agent → Research Sub-Agent → Web Search APIs → Resource Gathering
+
+4. GENERATION PHASE
+   Main Agent → File System Tools → Markdown Files → Image Generation → Real-time Updates
+
+5. REVIEW PHASE
+   Main Agent → Critique Sub-Agent → Quality Check → Safety Validation
+
+6. FINALIZATION PHASE
+   Main Agent → File Organization → Image Integration → Export Generation → User Delivery
+
+COMPONENT INTERACTIONS
+======================
+
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Web Frontend  │◄──►│   FastAPI       │◄──►│   Main Agent    │
+│                 │    │   Server        │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                       │
+                                │                       │
+                       ┌─────────────────┐    ┌─────────────────┐
+                       │   WebSocket     │    │   Sub-Agents    │
+                       │   Updates       │    │   System        │
+                       └─────────────────┘    └─────────────────┘
+                                                       │
+                       ┌─────────────────┐    ┌─────────────────┐
+                       │   File System   │    │   Web Search    │
+                       │   Operations    │    │   APIs          │
+                       └─────────────────┘    └─────────────────┘
+
+KEY FEATURES IMPLEMENTATION
+===========================
+
+1. REAL-TIME UPDATES
+   - WebSocket connection for live progress
+   - File-by-file generation updates
+   - Progress tracking and status messages
+
+2. ERROR HANDLING
+   - Graceful degradation for search failures
+   - Recursion limit management
+   - Fallback response systems
+
+3. MULTI-API SEARCH
+   - Primary: SerpAPI (structured results)
+   - Secondary: DuckDuckGo (free, reliable)
+   - Backup: Tavily (if available)
+
+4. FILE MANAGEMENT
+   - Markdown file generation
+   - AI image generation and collection
+   - Image organization and storage
+   - Export formats (ZIP, HTML) with images
+
+5. QUALITY ASSURANCE
+   - Research sub-agent for accuracy
+   - Critique sub-agent for safety
+   - Age-appropriate content validation
+
+TECHNICAL STACK
+===============
+
+Frontend:     HTML/CSS/JavaScript, WebSocket
+Backend:      FastAPI, Uvicorn, Python 3.13
+AI Framework: LangChain, DeepAgents, OpenAI GPT-4
+Search APIs:  SerpAPI, DuckDuckGo, Tavily
+Image Gen:    Replicate nano-banana model
+File System:  Built-in DeepAgents file tools
+Export:       Markdown, ZIP, HTML with images

@@ -1,0 +1,141 @@
+PHYSICS EXPERIMENT HELPER - VISUAL ARCHITECTURE
+===============================================
+
+                    ┌─────────────────────────────────┐
+                    │        USER INTERFACE           │
+                    │  ┌─────────┐  ┌─────────────┐   │
+                    │  │  Web    │  │  Mobile     │   │
+                    │  │ Frontend│  │  App        │   │
+                    │  └─────────┘  └─────────────┘   │
+                    └─────────────────────────────────┘
+                                │
+                                ▼
+                    ┌─────────────────────────────────┐
+                    │         API GATEWAY             │
+                    │  ┌─────────────────────────────┐ │
+                    │  │      FastAPI Server         │ │
+                    │  │  ┌─────────┐ ┌───────────┐ │ │
+                    │  │  │  REST   │ │ WebSocket │ │ │
+                    │  │  │  API    │ │ Real-time │ │ │
+                    │  │  └─────────┘ └───────────┘ │ │
+                    │  └─────────────────────────────┘ │
+                    └─────────────────────────────────┘
+                                │
+                                ▼
+                    ┌─────────────────────────────────┐
+                    │       DEEPAGENTS CORE           │
+                    │  ┌─────────────────────────────┐ │
+                    │  │    Main Physics Agent       │ │
+                    │  │  ┌─────────┐ ┌───────────┐ │ │
+                    │  │  │Planning │ │File System│ │ │
+                    │  │  │Tool     │ │Management │ │ │
+                    │  │  └─────────┘ └───────────┘ │ │
+                    │  └─────────────────────────────┘ │
+                    │              │                   │
+                    │              ▼                   │
+                    │  ┌─────────────────────────────┐ │
+                    │  │      Sub-Agents             │ │
+                    │  │  ┌─────────┐ ┌───────────┐ │ │
+                    │  │  │Research │ │  Critique │ │ │
+                    │  │  │Agent    │ │   Agent   │ │ │
+                    │  │  └─────────┘ └───────────┘ │ │
+                    │  └─────────────────────────────┘ │
+                    └─────────────────────────────────┘
+                                │
+                                ▼
+                    ┌─────────────────────────────────┐
+                    │      TOOLS & SERVICES           │
+                    │  ┌─────────────────────────────┐ │
+                    │  │      Web Search APIs        │ │
+                    │  │  ┌─────┐ ┌─────┐ ┌─────┐   │ │
+                    │  │  │Serp │ │ DDG │ │Tavily│   │ │
+                    │  │  │ API │ │ API │ │ API │   │ │
+                    │  │  └─────┘ └─────┘ └─────┘   │ │
+                    │  └─────────────────────────────┘ │
+                    │  ┌─────────────────────────────┐ │
+                    │  │      File System Tools      │ │
+                    │  │  ┌─────┐ ┌─────┐ ┌─────┐   │ │
+                    │  │  │write│ │read │ │edit │   │ │
+                    │  │  │file │ │file │ │file │   │ │
+                    │  │  └─────┘ └─────┘ └─────┘   │ │
+                    │  └─────────────────────────────┘ │
+                    └─────────────────────────────────┘
+                                │
+                                ▼
+                    ┌─────────────────────────────────┐
+                    │      DATA PERSISTENCE           │
+                    │  ┌─────────────────────────────┐ │
+                    │  │      File Storage           │ │
+                    │  │  ┌─────┐ ┌─────┐ ┌─────┐   │ │
+                    │  │  │ MD  │ │Images│ │Templates│ │
+                    │  │  │Files│ │     │ │     │   │ │
+                    │  │  └─────┘ └─────┘ └─────┘   │ │
+                    │  └─────────────────────────────┘ │
+                    │  ┌─────────────────────────────┐ │
+                    │  │    Session Management       │ │
+                    │  │  ┌─────┐ ┌─────┐ ┌─────┐   │ │
+                    │  │  │Memory│ │Cache│ │Export│   │ │
+                    │  │  │     │ │     │ │     │   │ │
+                    │  │  └─────┘ └─────┘ └─────┘   │ │
+                    │  └─────────────────────────────┘ │
+                    └─────────────────────────────────┘
+
+DATA FLOW SEQUENCE
+==================
+
+1. USER REQUEST
+   User Input → Web Frontend → FastAPI → Main Agent
+
+2. PLANNING
+   Main Agent → write_todos → Task Breakdown
+
+3. RESEARCH
+   Main Agent → Research Sub-Agent → Web Search → Resources
+
+4. GENERATION
+   Main Agent → File Tools → Markdown Files → Real-time Updates
+
+5. REVIEW
+   Main Agent → Critique Sub-Agent → Quality Check
+
+6. DELIVERY
+   Main Agent → File Organization → Export → User
+
+KEY FEATURES
+============
+
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  Real-time      │  │  Multi-API      │  │  Quality        │
+│  Updates        │  │  Search         │  │  Assurance      │
+│  • WebSocket    │  │  • SerpAPI      │  │  • Research     │
+│  • Progress     │  │  • DuckDuckGo   │  │    Sub-Agent    │
+│  • File Updates │  │  • Tavily       │  │  • Critique     │
+│                 │  │  • Fallbacks    │  │    Sub-Agent    │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  File           │  │  Error          │  │  Export         │
+│  Management     │  │  Handling       │  │  Options        │
+│  • Markdown     │  │  • Graceful     │  │  • ZIP Archive  │
+│  • Images       │  │    Degradation  │  │  • HTML Report  │
+│  • Templates    │  │  • Recursion    │  │  • Individual   │
+│  • Organization │  │    Limits       │  │    Files        │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+
+TECHNICAL STACK
+===============
+
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   Frontend      │  │    Backend      │  │   AI/ML         │
+│  • HTML/CSS/JS  │  │  • FastAPI      │  │  • LangChain    │
+│  • WebSocket    │  │  • Uvicorn      │  │  • DeepAgents   │
+│  • Real-time UI │  │  • Python 3.13  │  │  • OpenAI GPT-4 │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   Search APIs   │  │   File System   │  │   Export        │
+│  • SerpAPI      │  │  • Built-in     │  │  • Markdown     │
+│  • DuckDuckGo   │  │    Tools        │  │  • ZIP          │
+│  • Tavily       │  │  • File Ops     │  │  • HTML         │
+│  • Fallbacks    │  │  • Persistence  │  │  • Templates    │
+└─────────────────┘  └─────────────────┘  └─────────────────┘

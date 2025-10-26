@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Experiment Helper - Grade 9</title>
+
+    <!-- Daisy UI + Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.6.0/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .file-card:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s;
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .generating {
+            animation: pulse-soft 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero hero-gradient min-h-[300px] text-white">
+        <div class="hero-content text-center">
+            <div class="max-w-3xl">
+                <h1 class="text-5xl font-bold mb-4">
+                    <i class="fas fa-flask mr-3"></i>
+                    Physics Experiment Helper
+                </h1>
+                <p class="text-xl mb-2">AI-Powered Science Project Assistant for Grade 9 Students</p>
+                <p class="text-lg opacity-90">
+                    Get complete experiment guides with methodology, data templates, and report formats
+                </p>
+                <div class="mt-6 flex gap-3 justify-center flex-wrap">
+                    <div class="badge badge-lg bg-white/20 text-white border-0">
+                        <i class="fas fa-book-open mr-2"></i>
+                        Complete Documentation
+                    </div>
+                    <div class="badge badge-lg bg-white/20 text-white border-0">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Safety Focused
+                    </div>
+                    <div class="badge badge-lg bg-white/20 text-white border-0">
+                        <i class="fas fa-graduation-cap mr-2"></i>
+                        Grade 9 Level
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- Input Section -->
+        <div class="card bg-base-100 shadow-xl mb-8">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-4">
+                    <i class="fas fa-lightbulb text-warning"></i>
+                    What experiment would you like to create?
+                </h2>
+
+                <div class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text font-semibold">Describe your physics experiment idea</span>
+                        <span class="label-text-alt">Be specific about what you want to investigate</span>
+                    </label>
+                    <textarea
+                        id="experimentDescription"
+                        class="textarea textarea-bordered h-32 text-base"
+                        placeholder="Example: I want to investigate how the angle of a ramp affects the distance a ball travels. I'm interested in studying projectile motion and energy transfer."
+                    ></textarea>
+                    <label class="label">
+                        <span class="label-text-alt text-info">
+                            <i class="fas fa-info-circle"></i>
+                            Include: topic, what you want to measure, and any specific interests
+                        </span>
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Student Name (Optional)</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="studentName"
+                            class="input input-bordered"
+                            placeholder="Your name"
+                        />
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Grade Level</span>
+                        </label>
+                        <select id="gradeLevel" class="select select-bordered">
+                            <option selected>Grade 9</option>
+                            <option>Grade 8</option>
+                            <option>Grade 10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Connection Type</span>
+                        </label>
+                        <select id="connectionType" class="select select-bordered">
+                            <option value="rest">Standard</option>
+                            <option value="websocket">Real-time Updates</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 flex-wrap">
+                    <button id="generateBtn" class="btn btn-primary btn-lg flex-1 md:flex-none" onclick="generateExperiment()">
+                        <i class="fas fa-magic mr-2"></i>
+                        Generate Experiment Guide
+                    </button>
+                    <button class="btn btn-outline btn-lg" onclick="showExamples()">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        See Examples
+                    </button>
+                    <button class="btn btn-ghost btn-lg" onclick="clearAll()">
+                        <i class="fas fa-redo mr-2"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="statusAlert" class="alert hidden mt-4">
+                    <span id="statusMessage"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress and Results Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Tasks Progress -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-tasks text-primary"></i>
+                        Progress
+                    </h2>
+                    <div id="todosContainer" class="space-y-2 min-h-[200px]">
+                        <div class="text-center py-12 text-base-content/50">
+                            <i class="fas fa-clipboard-list text-5xl mb-3"></i>
+                            <p>Tasks will appear here during generation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generated Files -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-folder-open text-success"></i>
+                        Generated Files
+                    </h2>
+                    <div id="filesContainer" class="space-y-2 min-h-[200px]">
+                        <div class="text-center py-12 text-base-content/50">
+                            <i class="fas fa-file-alt text-5xl mb-3"></i>
+                            <p>Experiment files will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Images and Download Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <!-- Image Generation -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-magic text-warning"></i>
+                        Generate Images
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-semibold">Image Topic</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="imageTopic"
+                                class="input input-bordered"
+                                placeholder="e.g., Pendulum experiment setup"
+                            />
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-semibold">Image Style</span>
+                            </label>
+                            <select id="imageStyle" class="select select-bordered">
+                                <option value="scientific">Scientific (Professional)</option>
+                                <option value="educational">Educational (Student-friendly)</option>
+                                <option value="diagram">Diagram (Technical)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button id="generateImageBtn" class="btn btn-primary flex-1" onclick="generateImage()">
+                                <i class="fas fa-image mr-2"></i>
+                                Generate Image
+                            </button>
+                            <button id="generateMultipleBtn" class="btn btn-outline" onclick="generateMultipleImages()">
+                                <i class="fas fa-images mr-2"></i>
+                                Generate 3 Images
+                            </button>
+                        </div>
+                        
+                        <div id="imageGenerationStatus" class="alert hidden">
+                            <span id="imageGenerationMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experiment Images -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-images text-warning"></i>
+                        Experiment Images
+                    </h2>
+                    <div id="imagesContainer" class="space-y-2 min-h-[200px]">
+                        <div class="text-center py-12 text-base-content/50">
+                            <i class="fas fa-image text-5xl mb-3"></i>
+                            <p>Related images will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Section -->
+        <div class="card bg-base-100 shadow-xl mt-6">
+            <div class="card-body">
+                <h2 class="card-title">
+                    <i class="fas fa-download text-info"></i>
+                    Download Options
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <button id="downloadZipBtn" class="btn btn-lg btn-primary w-full" onclick="downloadAsZip()" disabled>
+                            <i class="fas fa-file-archive mr-2"></i>
+                            Download All Files (ZIP)
+                        </button>
+                        <p class="text-sm text-center opacity-70">All markdown files and images in one archive</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button id="downloadHtmlBtn" class="btn btn-lg btn-outline btn-info w-full" onclick="downloadAsHTML()" disabled>
+                            <i class="fas fa-file-code mr-2"></i>
+                            Download HTML Report
+                        </button>
+                        <p class="text-sm text-center opacity-70">Complete experiment as a single HTML document</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Content Display -->
+        <div id="fileContentSection" class="card bg-base-100 shadow-xl mt-6 hidden">
+            <div class="card-body">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="card-title">
+                        <i class="fas fa-file-code text-info"></i>
+                        <span id="currentFileName">File Preview</span>
+                    </h2>
+                    <div class="flex gap-2">
+                        <button class="btn btn-sm btn-primary" onclick="downloadCurrentFile()">
+                            <i class="fas fa-download mr-1"></i>
+                            Download
+                        </button>
+                        <button class="btn btn-sm btn-ghost" onclick="closeFilePreview()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="divider my-0"></div>
+                <div id="fileContentDisplay" class="prose max-w-none bg-base-200 p-6 rounded-lg overflow-auto max-h-[600px]">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Examples Modal -->
+    <dialog id="examplesModal" class="modal">
+        <div class="modal-box max-w-4xl">
+            <h3 class="font-bold text-2xl mb-4">
+                <i class="fas fa-flask text-primary mr-2"></i>
+                Experiment Examples
+            </h3>
+            <p class="text-sm opacity-70 mb-6">Click any example to use it as your starting point</p>
+
+            <div id="examplesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Examples will be loaded here -->
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 bg-base-200 text-base-content mt-12">
+        <aside>
+            <i class="fas fa-atom text-4xl text-primary"></i>
+            <p class="font-bold text-lg">
+                Physics Experiment Helper
+            </p>
+            <p>Powered by Deep Agents & AI</p>
+            <p class="text-sm opacity-70">Helping Grade 9 students excel in science</p>
+        </aside>
+        <nav>
+            <div class="grid grid-flow-col gap-4">
+                <a class="link link-hover">Safety Guidelines</a>
+                <a class="link link-hover">About</a>
+                <a class="link link-hover">Feedback</a>
+            </div>
+        </nav>
+    </footer>
+
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        let currentSession = null;
+        let currentFiles = {};
+        let currentImages = [];
+        let currentFileName = null;
+        let ws = null;
+
+        // Set status message
+        function setStatus(type, message) {
+            const alert = document.getElementById('statusAlert');
+            const messageEl = document.getElementById('statusMessage');
+
+            alert.className = `alert alert-${type}`;
+            alert.classList.remove('hidden');
+
+            const icons = {
+                info: 'fa-info-circle',
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                error: 'fa-exclamation-circle'
+            };
+
+            messageEl.innerHTML = `<i class="fas ${icons[type]} mr-2"></i>${message}`;
+
+            if (type === 'info') {
+                alert.classList.add('generating');
+            } else {
+                alert.classList.remove('generating');
+            }
+        }
+
+        // Update TODOs display
+        function updateTodos(todos) {
+            const container = document.getElementById('todosContainer');
+
+            if (!todos || todos.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-base-content/50">
+                        <i class="fas fa-clipboard-list text-5xl mb-3"></i>
+                        <p>No tasks yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const statusConfig = {
+                pending: { icon: 'fa-clock', class: 'badge-warning' },
+                in_progress: { icon: 'fa-spinner fa-spin', class: 'badge-info' },
+                completed: { icon: 'fa-check', class: 'badge-success' }
+            };
+
+            container.innerHTML = todos.map(todo => {
+                const config = statusConfig[todo.status] || statusConfig.pending;
+                return `
+                    <div class="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
+                        <i class="fas ${config.icon} text-lg"></i>
+                        <span class="flex-1">${todo.content}</span>
+                        <span class="badge ${config.class}">${todo.status.replace('_', ' ')}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update files display
+        function updateFiles(files) {
+            const container = document.getElementById('filesContainer');
+            currentFiles = files;
+
+            if (!files || Object.keys(files).length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-base-content/50">
+                        <i class="fas fa-file-alt text-5xl mb-3"></i>
+                        <p>No files generated yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const fileIcons = {
+                'experiment_synopsis': 'fa-file-alt',
+                'theory_and_background': 'fa-book',
+                'methodology': 'fa-list-ol',
+                'data_template': 'fa-table',
+                'analysis_and_conclusion': 'fa-chart-line',
+                'report_template': 'fa-file-invoice',
+                'references_and_resources': 'fa-link'
+            };
+
+            container.innerHTML = Object.keys(files).map(filename => {
+                const iconKey = Object.keys(fileIcons).find(key => filename.includes(key)) || 'default';
+                const icon = fileIcons[iconKey] || 'fa-file';
+
+                return `
+                    <div class="card bg-base-200 hover:bg-base-300 cursor-pointer file-card" onclick="viewFile('${filename}')">
+                        <div class="card-body p-4 flex-row items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="fas ${icon} text-2xl text-primary"></i>
+                                <span class="font-semibold">${filename}</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); viewFile('${filename}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); downloadFile('${filename}')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Enable download buttons if we have files
+            enableDownloadButtons();
+        }
+
+        // Update images display
+        function updateImages(images) {
+            const container = document.getElementById('imagesContainer');
+            currentImages = images || [];
+
+            if (!images || images.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-base-content/50">
+                        <i class="fas fa-image text-5xl mb-3"></i>
+                        <p>No images found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="grid grid-cols-2 gap-3">
+                    ${images.map((img, idx) => `
+                        <div class="card bg-base-200 hover:shadow-lg transition-shadow">
+                            <figure class="px-2 pt-2">
+                                <img src="${img}" alt="Experiment Image ${idx + 1}"
+                                     class="rounded-lg w-full h-32 object-cover cursor-pointer"
+                                     onclick="openImageModal('${img}')"
+                                     onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Available'">
+                            </figure>
+                            <div class="card-body p-3">
+                                <p class="text-xs truncate">Image ${idx + 1}</p>
+                                <a href="${img}" target="_blank" class="btn btn-xs btn-primary">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Enable download buttons
+        function enableDownloadButtons() {
+            document.getElementById('downloadZipBtn').disabled = false;
+            document.getElementById('downloadHtmlBtn').disabled = false;
+        }
+
+        // Generate experiment
+        async function generateExperiment() {
+            const description = document.getElementById('experimentDescription').value.trim();
+            const connectionType = document.getElementById('connectionType').value;
+
+            if (!description) {
+                setStatus('warning', 'Please describe your experiment idea');
+                return;
+            }
+
+            if (connectionType === 'websocket') {
+                generateExperimentWebSocket(description);
+            } else {
+                await generateExperimentREST(description);
+            }
+        }
+
+        // REST API generation
+        async function generateExperimentREST(description) {
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
+            setStatus('info', 'Generating your experiment guide... This may take 2-5 minutes.');
+
+            try {
+                const response = await fetch('/api/generate-experiment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        experiment_description: description,
+                        student_name: document.getElementById('studentName').value,
+                        grade_level: document.getElementById('gradeLevel').value,
+                        model_name: 'gpt-4o'
+                    })
+                });
+
+                const result = await response.json();
+                currentSession = result.session_id;
+
+                updateTodos(result.todos);
+                updateFiles(result.files);
+
+                // Fetch and update images
+                if (currentSession) {
+                    const imagesResponse = await fetch(`/api/sessions/${currentSession}/images`);
+                    const imagesData = await imagesResponse.json();
+                    updateImages(imagesData.images);
+                }
+
+                setStatus('success', `Complete! Generated ${Object.keys(result.files).length} experiment files.`);
+
+            } catch (error) {
+                console.error('Error:', error);
+                setStatus('error', 'Error generating experiment: ' + error.message);
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        // WebSocket generation
+        function generateExperimentWebSocket(description) {
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
+            setStatus('info', 'Starting experiment generation...');
+
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/generate-experiment`;
+
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    experiment_description: description,
+                    student_name: document.getElementById('studentName').value,
+                    grade_level: document.getElementById('gradeLevel').value,
+                    model_name: 'gpt-4o'
+                }));
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+
+                switch (data.type) {
+                    case 'status':
+                        setStatus('info', data.message);
+                        break;
+                    case 'todos_update':
+                        updateTodos(data.todos);
+                        break;
+                    case 'images_update':
+                        updateImages(data.images);
+                        break;
+                    case 'file_update':
+                        currentFiles[data.filename] = data.content;
+                        updateFiles(currentFiles);
+                        setStatus('info', `Generated: ${data.filename}`);
+                        break;
+                    case 'completion':
+                        currentSession = data.session_id;
+                        updateTodos(data.todos);
+                        updateFiles(data.files);
+                        if (data.images) {
+                            updateImages(data.images);
+                        }
+                        setStatus('success', data.message);
+                        generateBtn.disabled = false;
+                        ws.close();
+                        break;
+                    case 'error':
+                        setStatus('error', data.message);
+                        generateBtn.disabled = false;
+                        ws.close();
+                        break;
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                setStatus('error', 'Connection error');
+                generateBtn.disabled = false;
+            };
+        }
+
+        // View file
+        function viewFile(filename) {
+            if (!currentFiles[filename]) return;
+
+            currentFileName = filename;
+            document.getElementById('currentFileName').textContent = filename;
+            document.getElementById('fileContentDisplay').innerHTML = marked.parse(currentFiles[filename]);
+            document.getElementById('fileContentSection').classList.remove('hidden');
+
+            // Scroll to file view
+            document.getElementById('fileContentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Download file
+        function downloadFile(filename) {
+            if (!currentSession || !currentFiles[filename]) return;
+
+            const blob = new Blob([currentFiles[filename]], { type: 'text/markdown' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Download current file in preview
+        function downloadCurrentFile() {
+            if (currentFileName) {
+                downloadFile(currentFileName);
+            }
+        }
+
+        // Close file preview
+        function closeFilePreview() {
+            document.getElementById('fileContentSection').classList.add('hidden');
+        }
+
+        // Show examples
+        async function showExamples() {
+            const modal = document.getElementById('examplesModal');
+            const container = document.getElementById('examplesContainer');
+
+            try {
+                const response = await fetch('/api/experiment-examples');
+                const data = await response.json();
+
+                container.innerHTML = data.examples.map(ex => `
+                    <div class="card bg-base-200 hover:bg-base-300 cursor-pointer transition-all"
+                         onclick="useExample('${ex.description}')">
+                        <div class="card-body">
+                            <h3 class="card-title text-lg">${ex.title}</h3>
+                            <p class="text-sm opacity-80">${ex.description}</p>
+                            <div class="card-actions justify-between items-center mt-2">
+                                <div class="badge badge-primary">${ex.category}</div>
+                                <div class="badge badge-outline">${ex.difficulty}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                modal.showModal();
+            } catch (error) {
+                console.error('Error loading examples:', error);
+            }
+        }
+
+        // Use example
+        function useExample(description) {
+            document.getElementById('experimentDescription').value = description;
+            document.getElementById('examplesModal').close();
+        }
+
+        // Clear all
+        function clearAll() {
+            document.getElementById('experimentDescription').value = '';
+            document.getElementById('studentName').value = '';
+            currentSession = null;
+            currentFiles = {};
+            currentImages = [];
+            currentFileName = null;
+            updateTodos([]);
+            updateFiles({});
+            updateImages([]);
+            document.getElementById('statusAlert').classList.add('hidden');
+            document.getElementById('downloadZipBtn').disabled = true;
+            document.getElementById('downloadHtmlBtn').disabled = true;
+            closeFilePreview();
+        }
+
+        // Download as ZIP
+        async function downloadAsZip() {
+            if (!currentSession) {
+                setStatus('warning', 'No experiment to download');
+                return;
+            }
+
+            try {
+                window.location.href = `/api/sessions/${currentSession}/download-zip`;
+                setStatus('success', 'Downloading ZIP archive...');
+            } catch (error) {
+                setStatus('error', 'Error downloading ZIP: ' + error.message);
+            }
+        }
+
+        // Download as HTML
+        async function downloadAsHTML() {
+            if (!currentSession) {
+                setStatus('warning', 'No experiment to download');
+                return;
+            }
+
+            try {
+                window.location.href = `/api/sessions/${currentSession}/download-html`;
+                setStatus('success', 'Downloading HTML report...');
+            } catch (error) {
+                setStatus('error', 'Error downloading HTML: ' + error.message);
+            }
+        }
+
+        // Open image in modal (can be enhanced with a proper image modal)
+        function openImageModal(imageUrl) {
+            window.open(imageUrl, '_blank');
+        }
+
+        // Image generation functions
+        function setImageGenerationStatus(type, message) {
+            const alert = document.getElementById('imageGenerationStatus');
+            const messageEl = document.getElementById('imageGenerationMessage');
+
+            alert.className = `alert alert-${type}`;
+            alert.classList.remove('hidden');
+
+            const icons = {
+                info: 'fa-info-circle',
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                error: 'fa-exclamation-circle'
+            };
+
+            messageEl.innerHTML = `<i class="fas ${icons[type]} mr-2"></i>${message}`;
+
+            if (type === 'info') {
+                alert.classList.add('generating');
+            } else {
+                alert.classList.remove('generating');
+            }
+        }
+
+        async function generateImage() {
+            const topic = document.getElementById('imageTopic').value.trim();
+            const style = document.getElementById('imageStyle').value;
+            const generateBtn = document.getElementById('generateImageBtn');
+
+            if (!topic) {
+                setImageGenerationStatus('warning', 'Please enter an image topic');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            setImageGenerationStatus('info', 'Generating image... This may take 1-2 minutes.');
+
+            try {
+                const response = await fetch('/api/generate-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        experiment_topic: topic,
+                        style: style
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    setImageGenerationStatus('success', result.message);
+                    
+                    // Add the new image to the current images list
+                    if (result.image_url) {
+                        currentImages.push(result.image_url);
+                        updateImages(currentImages);
+                    }
+                } else {
+                    setImageGenerationStatus('error', result.message);
+                }
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                setImageGenerationStatus('error', 'Error generating image: ' + error.message);
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        async function generateMultipleImages() {
+            const topic = document.getElementById('imageTopic').value.trim();
+            const generateBtn = document.getElementById('generateMultipleBtn');
+
+            if (!topic) {
+                setImageGenerationStatus('warning', 'Please enter an image topic');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            setImageGenerationStatus('info', 'Generating 3 images... This may take 3-5 minutes.');
+
+            try {
+                const response = await fetch('/api/generate-multiple-images', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        experiment_topic: topic,
+                        count: 3,
+                        styles: ['scientific', 'educational', 'diagram']
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    setImageGenerationStatus('success', `Generated ${result.generated_count} out of ${result.total_requested} images`);
+                    
+                    // Add successful images to the current images list
+                    const newImages = result.images
+                        .filter(img => img.status === 'success')
+                        .map(img => img.url);
+                    
+                    currentImages.push(...newImages);
+                    updateImages(currentImages);
+                } else {
+                    setImageGenerationStatus('error', 'Failed to generate images');
+                }
+
+            } catch (error) {
+                console.error('Error generating images:', error);
+                setImageGenerationStatus('error', 'Error generating images: ' + error.message);
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        // Auto-fill image topic from experiment description
+        function updateImageTopicFromExperiment() {
+            const experimentDesc = document.getElementById('experimentDescription').value.trim();
+            if (experimentDesc && !document.getElementById('imageTopic').value) {
+                // Extract a short topic from the experiment description
+                const words = experimentDesc.split(' ').slice(0, 8).join(' ');
+                document.getElementById('imageTopic').value = words;
+            }
+        }
+
+        // Add event listener to auto-fill image topic
+        document.getElementById('experimentDescription').addEventListener('input', updateImageTopicFromExperiment);
+    </script>
+</body>
+</html>
