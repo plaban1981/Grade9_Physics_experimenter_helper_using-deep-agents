@@ -451,7 +451,21 @@ Refine & Finalize
 - **Modularity** - Research agent can be reused for different domains
 
 ---
+---
+<img width="1902" height="796" alt="image" src="https://github.com/user-attachments/assets/9e308eec-c6cb-4c60-a659-6d99174fd999" />
 
+
+
+<img width="1756" height="852" alt="image" src="https://github.com/user-attachments/assets/f64e2def-abeb-4fe2-be82-11ba691ce2f2" />
+
+
+<img width="1585" height="857" alt="image" src="https://github.com/user-attachments/assets/1d8d0fbd-4c21-4a6a-bb4f-8a4c09985a43" />
+
+
+
+
+
+---
 ## Safety & Educational Standards
 
 ### Safety Features
